@@ -1,5 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../world_states.dart';
+// import your screen file, change the path to match your project
+
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,6 +22,8 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _pulseAnimation;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+
+  Timer? _timer;
 
   // Iconify API - serves SVG icons directly via URL
   final String virusIconUrl =
@@ -54,10 +61,20 @@ class _SplashScreenState extends State<SplashScreen>
       begin: const Offset(0, 0.3),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeOut));
+
+    // Go to WorldStatesScreen after 3 seconds
+    _timer = Timer(const Duration(seconds: 3), () {
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const WorldStatesScreen()),
+      );
+    });
   }
 
   @override
   void dispose() {
+    _timer?.cancel();
     _rotationController.dispose();
     _pulseController.dispose();
     _fadeController.dispose();
