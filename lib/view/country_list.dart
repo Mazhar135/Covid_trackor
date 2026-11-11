@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart'; // Shimmer package for the loading effect
-// Adjust this path to where your service file lives
+// Adjust these paths to match your project
 import 'package:covid_trackor/Services/states_services.dart';
+import 'package:covid_trackor/view/detail_screen.dart';
 
 /// Screen that shows a searchable list of countries with their flags.
 class CountryListScreen extends StatefulWidget {
@@ -186,9 +187,26 @@ class _CountryListScreenState extends State<CountryListScreen> {
                         // Total cases shown under the name
                         subtitle: Text('Cases: ${item['cases'] ?? 0}',
                             style: const TextStyle(color: Colors.grey)),
-                        // On tap, close this screen and send the selected
-                        // country back to the previous screen
-                        onTap: () => Navigator.pop(context, item),
+                        // On tap, open the detail screen and pass the
+                        // selected country's data to it
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailScreen(
+                                name: item['country'] ?? '',
+                                image: item['countryInfo']?['flag'] ?? '',
+                                totalCases: item['cases'] ?? 0,
+                                totalDeaths: item['deaths'] ?? 0,
+                                totalRecovered: item['recovered'] ?? 0,
+                                active: item['active'] ?? 0,
+                                critical: item['critical'] ?? 0,
+                                todayRecovered: item['todayRecovered'] ?? 0,
+                                test: item['tests'] ?? 0,
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
                   );
